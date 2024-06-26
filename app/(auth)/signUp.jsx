@@ -8,8 +8,6 @@ import { Link } from "expo-router";
 import { createUser } from "../../lib/appwrite";
 
 const SignUp = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
-
   const [isSubmitting, setSubmitting] = useState(false);
   const [input, setInput] = useState({
     username: "",
@@ -29,8 +27,8 @@ const SignUp = () => {
         input.password,
         input.username
       );
-      setUser(result);
-      setIsLogged(true);
+
+      //set it to global state
 
       router.replace("/home");
     } catch (error) {
@@ -55,20 +53,20 @@ const SignUp = () => {
           <InputField
             title="Username"
             value={input.username}
-            handleChangeText={(e) => setinput({ ...input, username: e })}
+            handleChangeText={(e) => setInput({ ...input, username: e })}
             otherStyles="mt-7"
           />
           <InputField
             title="Email"
             value={input.email}
-            handleChangeText={(e) => setinput({ ...input, email: e })}
+            handleChangeText={(e) => setInput({ ...input, email: e })}
             otherStyles="mt-7"
             keyboardType="email-address"
           />
           <InputField
             title="Password"
             value={input.password}
-            handleChangeText={(e) => setinput({ ...input, password: e })}
+            handleChangeText={(e) => setInput({ ...input, password: e })}
             otherStyles="mt-7"
           />
 
