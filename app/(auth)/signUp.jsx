@@ -1,21 +1,44 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import InputField from "../../components/InputField";
 import CustomButton from "../../components/CustomButton";
 import { Link } from "expo-router";
+import { createUser } from "../../lib/appwrite";
 
 const SignUp = () => {
-  const submit = () => {};
+  const { setUser, setIsLogged } = useGlobalContext();
 
-  const [isSubmitting, setisSubmitting] = useState(false);
-
-  const [input, setinput] = useState({
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [input, setInput] = useState({
     username: "",
     email: "",
     password: "",
   });
+
+  const submit = async () => {
+    if (input.username === "" || input.email === "" || input.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    setSubmitting(true);
+    try {
+      const result = await createUser(
+        input.email,
+        input.password,
+        input.username
+      );
+      setUser(result);
+      setIsLogged(true);
+
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -31,8 +54,8 @@ const SignUp = () => {
           </Text>
           <InputField
             title="Username"
-            value={input.email}
-            handleChangeText={(e) => setinput({ ...input, email: e })}
+            value={input.username}
+            handleChangeText={(e) => setinput({ ...input, username: e })}
             otherStyles="mt-7"
           />
           <InputField
